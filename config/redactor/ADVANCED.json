@@ -1,0 +1,70 @@
+{
+  "toolbarFixed": true,
+  "linkNewTab": true,
+  "buttons": [
+    "html",
+    "format",
+    "bold",
+    "italic",
+    "underline",
+    "deleted",
+    "line",
+    "link",
+    "image",
+    "lists"
+  ],
+  "plugins": [
+    "alignment",
+    "fontcolor",
+    "table",
+    "fullscreen",
+    "clips"
+  ],
+  "formatting": [],
+  "formattingAdd": {
+    "h2": {
+      "title": "Header 2",
+      "api": "module.block.format",
+      "args": {
+        "tag": "h2"
+      }
+    },
+    "h3": {
+      "title": "Header 3",
+      "api": "module.block.format",
+      "args": {
+        "tag": "h3"
+      }
+    },
+    "h4": {
+      "title": "Header 4",
+      "api": "module.block.format",
+      "args": {
+        "tag": "h4"
+      }
+    },
+    "h5": {
+      "title": "Header 5",
+      "api": "module.block.format",
+      "args": {
+        "tag": "h5"
+      }
+    },
+    "paragraph": {
+      "title": "Paragraph",
+      "api": "module.block.format",
+      "args": {
+        "tag": "p"
+      }
+    }
+  },
+  "imagePosition": {
+    "left": "float-left",
+    "right": "float-right",
+    "center": "clearfix"
+  },
+  "clips": [
+    ["Small Button", "<a class=\"text-sm bg-blue-500 hover:bg-blue-700 text-white hover:text-white font-bold py-1 px-4 mx-1 my-1 inline-block cursor-pointer rounded shadow\" href=\"#\">Small Button</a>"],
+    ["Large Button", "<a class=\"text-lg bg-blue-500 hover:bg-blue-700 text-white hover:text-white font-bold py-2 px-8 mx-2 my-1 inline-block cursor-pointer rounded shadow\" href=\"#\">Large Button</a>"]
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "require": {
+    "craftcms/cms": "^3.6",
+    "craftcms/mailgun": "^1.4",
+    "danieltott/craft-sidebar-admin-links": "^1.0",
+    "mmikkel/cp-field-inspect": "^1.2",
+    "putyourlightson/craft-dashboard-begone": "^1.0",
+    "vlucas/phpdotenv": "^3.6",
+    "ext-pdo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "modules\\": "modules/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "7.4"
+    }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../packages/*",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "scripts": {
+    "post-create-project-cmd": ["@php setup-support"],
+    "post-install-cmd": ["composer craft-update"],
+    "post-update-cmd": ["composer craft-update"],
+    "craft-update": [
+      "@php craft install/check && php craft migrate/all --interactive=0 || exit 0",
+      "@php craft install/check && php craft project-config/apply --interactive=0 || exit 0",
+      "@php craft install/check && php craft clear-caches/all --interactive=0 || exit 0"
+    ],
+    "nuke": [
+      "rm -rf vendor/ || true",
+      "rm composer.lock || true",
+      "composer clear-cache",
+      "composer update"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "toolbarFixed": true,
+  "breakline": true,
+  "buttons": [
+    "bold",
+    "italic",
+    "underline",
+    "deleted",
+    "link"
+  ],
+  "plugins": [
+    "fontcolor"
+  ]
+}

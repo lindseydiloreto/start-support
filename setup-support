@@ -1,0 +1,169 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Automated project setup
+ */
+
+// If .env file already exists, exit immediately
+if (file_exists('.env')) {
+    fwrite(\STDOUT, 'Aborting setup, the .env file already exists!'.PHP_EOL);
+    exit();
+}
+
+// ================================================================================ //
+
+// Clean up database name
+$dbPrefix = 'support';
+$dirName = strtolower(basename(__DIR__));
+$dbName = preg_replace('/[^a-z0-9_]/', '', $dirName);
+
+// Configure local environment
+$config = [
+    'hostname' => 'mysql-5.7-3306.database.nitro',
+    'database' => "{$dbPrefix}_{$dbName}",
+    // 'database' => prompt('Database: ', "{$dbPrefix}_{$dbName}"),
+    'username' => 'nitro',
+    'password' => 'nitro',
+
+    'baseurl'  => "https://{$dirName}.test",
+    'basepath' => "/app/support/{$dirName}/public",
+];
+
+setupDatabase($config);
+setupEnvFile($config);
+
+// Output a link to the control panel
+fwrite(\STDOUT, PHP_EOL.'Hooray, your new site has been created! 👏'.PHP_EOL);
+fwrite(\STDOUT, $config['baseurl'].'/cp'.PHP_EOL.PHP_EOL);
+
+// All done!
+exit();
+
+// ================================================================================ //
+
+function setupDatabase($config)
+{
+    // Get current database dump
+    $files = glob(__DIR__.'/db/*');
+    $sql = ($files ? $files[0] : false);
+
+    // Attempt to create a new database
+    try {
+
+        // Connect via PDO
+        $dsn = "mysql:host={$config['hostname']}";
+        $dbh = new PDO($dsn, $config['username'], $config['password']);
+
+        // Create a new database
+        echo "Creating a new database ... ";
+        $success = (false !== $dbh->exec("CREATE DATABASE {$config['database']}"));
+
+        // If we couldn't create the database, fail
+        if (!$success) {
+            echo PHP_EOL;
+            echo 'MySQL error: '.print_r($dbh->errorInfo(), true);
+            echo "Aborting setup, database can't be created.".PHP_EOL;
+            exit();
+        }
+
+    } catch (PDOException $e) {
+
+        // Output error and quit
+        echo $e->getMessage().PHP_EOL;
+        exit();
+
+    }
+
+    // Report database creation
+    echo "done ({$config['database']})".PHP_EOL;
+
+    // Import the SQL file
+    if ($sql) {
+        echo "Importing SQL file ... ";
+        system("mysql --host={$config['hostname']} --user={$config['username']} --password={$config['password']} {$config['database']} < {$sql}");
+        $filename = basename($sql);
+        echo "done (/db/{$filename})".PHP_EOL;
+    } else {
+        echo "Can't import SQL file because it doesn't exist.".PHP_EOL;
+    }
+
+}
+
+function setupEnvFile($config)
+{
+    // Copy example .env file
+    copy('.env.example', '.env');
+
+    // Get all existing settings from the .env file
+    $settings = file_get_contents('.env');
+
+    // Get replacement strings
+    $replacements = getEnvReplacements($config);
+
+    // Update all relevant settings
+    foreach ($replacements as $key => $val) {
+        $settings = str_replace($key, $val, $settings);
+    }
+
+    // Save new settings back to the .env file
+    file_put_contents('.env', $settings);
+
+    // Generate new security key
+    system('./craft setup/security-key');
+}
+
+// ================================================================================ //
+
+function getEnvReplacements($config)
+{
+    // Strings to be updated in .env file
+    $replacements = [
+        // Enable test email address, point test emails to Lindsey
+        '#TEST_EMAIL="support@doublesecretagency.com"' =>
+        'TEST_EMAIL="lindsey@doublesecretagency.com"',
+    ];
+
+    // Updated settings for .env file
+    $updatedValues = [
+        'DB_HOSTNAME'   => $config['hostname'],
+        'DB_DATABASE'   => $config['database'],
+        'DB_USERNAME'   => $config['username'],
+        'DB_PASSWORD'   => $config['password'],
+        'SITE_BASEURL'  => $config['baseurl'],
+        'SITE_BASEPATH' => $config['basepath'],
+    ];
+
+    // Append all updated values
+    foreach ($updatedValues as $key => $val) {
+        $replacements["{$key}=\"\""] = "{$key}=\"{$val}\"";
+    }
+
+    // Return strings to be updated
+    return $replacements;
+}
+
+// ================================================================================ //
+
+//// Prompt user for new information
+//function prompt($message, $default = false)
+//{
+//    // Include default value in message (if it exists)
+//    if ($default) {
+//        $message = rtrim($message, ': ');
+//        $message = "{$message} [{$default}]: ";
+//    }
+//
+//    // Display message prompt
+//    fwrite(\STDOUT, $message);
+//
+//    // Get user response
+//    $response = rtrim(fgets(\STDIN), PHP_EOL);
+//
+//    // If user responded, return their answer
+//    if ($response) {
+//        return $response;
+//    }
+//
+//    // Return the default value
+//    return $default;
+//}

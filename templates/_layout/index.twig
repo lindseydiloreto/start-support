@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>{{ (title ? "#{title} | ") ~ systemName }}</title>
+{% do view.registerAssetBundle(LayoutAssets) %}
+</head>
+
+<body>
+    <header class="text-center font-bold py-1 mb-3 border-b border-gray-300 bg-gray-100">
+        {% include '_layout/nav' %}
+    </header>
+    <div class="max-w-6xl mx-auto" style="min-height:600px">
+        {% block content null %}
+    </div>
+</body>
+</html>

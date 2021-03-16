@@ -1,0 +1,20 @@
+h2 {
+  //@apply font-bold text-2xl text-red-600
+}
+h3 {
+  //@apply font-bold text-lg text-blue-600
+}
+
+a.btn {
+  //@apply bg-blue-500 hover:bg-blue-700 text-white hover:text-white font-bold inline-block cursor-pointer rounded shadow
+}
+a.btn-sm {
+  //@apply text-sm mx-1 my-1 px-4 py-1
+}
+a.btn-lg {
+  //@apply text-lg mx-2 my-1 px-8 py-2
+}
+
+p {
+  padding-bottom: 0.8em;
+}
