@@ -4,12 +4,6 @@
  * Automated project setup
  */
 
-// If .env file already exists, exit immediately
-if (file_exists('.env')) {
-    fwrite(\STDOUT, 'Aborting setup, the .env file already exists!'.PHP_EOL);
-    exit();
-}
-
 // ================================================================================ //
 
 // Clean up database name
@@ -91,8 +85,10 @@ function setupDatabase($config)
 
 function setupEnvFile($config)
 {
-    // Copy example .env file
-    copy('.env.example', '.env');
+    // If .env file does not already exists, copy example .env file
+    if (!file_exists('.env')) {
+        copy('.env.example', '.env');
+    }
 
     // Get all existing settings from the .env file
     $settings = file_get_contents('.env');
