@@ -1,4 +1,4 @@
-dateModified: 1615953887
+dateModified: 1618258146
 email:
   fromEmail: $BUSINESS_EMAIL
   fromName: $BUSINESS_NAME
@@ -29,7 +29,8 @@ plugins:
 system:
   edition: solo
   live: true
-  name: Support
+  name: $BUSINESS_NAME
+  retryDuration: null
   schemaVersion: 3.6.6
   timeZone: America/Los_Angeles
 users:
